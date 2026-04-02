@@ -1,4 +1,5 @@
 import React from 'react';
+import { ChevronDown, Info } from 'lucide-react';
 
 function BalanceCard() {
   return (
@@ -6,7 +7,7 @@ function BalanceCard() {
       <div className="flex justify-between items-center mb-6 relative z-10">
         <h2 className="text-sm font-semibold text-white">Your Balance</h2>
         <button className="text-xs text-[#888] flex items-center hover:text-white transition-colors">
-          US Dollar <svg className="w-3 h-3 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+          Indian Rupee <ChevronDown className="w-3 h-3 ml-1" />
         </button>
       </div>
       <hr className="border-[#333] mb-4" />
@@ -15,7 +16,7 @@ function BalanceCard() {
         <div className="flex justify-between items-end">
           <h1 className="text-4xl font-light tracking-tight text-white font-semibold">₹20,000</h1>
           <div className="w-8 h-8 rounded-full bg-[#222] flex items-center justify-center border border-[#333]">
-            <svg className="w-4 h-4 text-cyan-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <Info className="w-4 h-4 text-cyan-200" />
           </div>
         </div>
       </div>

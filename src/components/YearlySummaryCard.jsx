@@ -1,25 +1,14 @@
 import React from "react";
+import { ChevronDown } from "lucide-react";
 
 function YearlySummaryCard() {
   return (
     <div className="md:col-span-4 bg-[#161616] border border-[#222] rounded-2xl p-6 pb-0">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-sm font-semibold text-white">Yearly Summary</h2>
+        <h2 className="text-sm font-semibold text-white">Monthly Summary</h2>
         <button className="text-xs text-[#888] flex items-center hover:text-white transition-colors">
           2026{" "}
-          <svg
-            className="w-3 h-3 ml-1"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
+          <ChevronDown className="w-3 h-3 ml-1" />
         </button>
       </div>
       <hr className="border-[#333] mb-4" />

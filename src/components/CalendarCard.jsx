@@ -29,7 +29,7 @@ function CalendarCard() {
         ))}
         {[...Array(31)].map((_, i) => {
           const dayNum = i + 1;
-          const isToday = 20;
+          const isToday = 17;
           
           const hasData = dayNum <= isToday;
           let earned = 0, expense = 0, isProfit = true;
