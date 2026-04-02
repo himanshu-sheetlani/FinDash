@@ -4,7 +4,7 @@ function CalendarCard() {
   return (
     <div className="md:col-span-4 bg-[#161616] border border-[#222] rounded-2xl p-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-sm font-semibold text-white">Overview</h2>
+        <h2 className="text-sm font-semibold text-white">Monthly Overview</h2>
         <p className="text-xs text-[#888]">March 2026</p>
       </div>
       <hr className="border-[#333] mb-4" />
