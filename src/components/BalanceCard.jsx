@@ -1,7 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronDown, Info, Heart } from "lucide-react";
+import { getCalculatedBalance, formatAbsoluteCurrency } from "../utils/storage";
 
 function BalanceCard() {
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    const fetchBalance = () => {
+      setBalance(getCalculatedBalance());
+    };
+    fetchBalance();
+    window.addEventListener('transactions_updated', fetchBalance);
+    return () => window.removeEventListener('transactions_updated', fetchBalance);
+  }, []);
   return (
     <div className="md:col-span-4 bg-[#161616] border border-[#222] rounded-2xl p-6 relative overflow-hidden">
       <div className="flex justify-between items-center mb-6 relative z-10">
@@ -15,7 +26,7 @@ function BalanceCard() {
         <p className="text-xs text-[#888] mb-1">Balance</p>
         <div className="flex justify-between items-end">
           <h1 className="text-4xl font-light tracking-tight text-white font-semibold">
-            ₹34,000
+            {formatAbsoluteCurrency(balance)}
           </h1>
           <div className="w-8 h-8 rounded-full bg-[#222] flex items-center justify-center border border-[#333]">
             <Info className="w-4 h-4 text-cyan-200" />

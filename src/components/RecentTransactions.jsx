@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ArrowUpRight, ArrowDownLeft, ArrowBigRight } from 'lucide-react';
 import TransactionBadge from './TransactionBadge';
+import { getTransactions, formatAbsoluteCurrency } from '../utils/storage';
 
 function RecentTransactions() {
   const navigate = useNavigate();
+  const [transactions, setTransactions] = useState([]);
 
-  const transactions = [
-    { id: 1, type: 'House Rent', desc: 'Sent • Mar 15, 2026', amount: '₹5,000', curr: '₹34,000 INR', status: 'Essentials', method: 'Bank Transfer', methodDesc: '**** 9052' },
-    { id: 2, type: 'Cloths', desc: 'Sent • Mar 10, 2026', amount: '₹1,000', curr: '₹39,000 INR', status: 'Wants', method: 'Credit Card', methodDesc: '**** 3560' },
-    { id: 3, type: 'Salary', desc: 'Receive • Mar 8, 2026', amount: '₹35,000', curr: '₹40,000 INR', status: 'Recieved', method: 'Bank Transfer', methodDesc: '**** 9052' },
-    { id: 4, type: 'Full Stack Course', desc: 'Sent • Mar 2, 2026', amount: '₹500', curr: '₹5,000 INR', status: 'Learning', method: 'UPI', methodDesc: '**** 2093@upi' },
-  ];
+  useEffect(() => {
+    const fetchTx = () => {
+      setTransactions(getTransactions().slice(0, 4));
+    };
+    fetchTx();
+    window.addEventListener('transactions_updated', fetchTx);
+    return () => window.removeEventListener('transactions_updated', fetchTx);
+  }, []);
 
   return (
     <div className="md:col-span-8 bg-[#161616] border border-[#222] rounded-2xl p-6">
@@ -38,29 +42,29 @@ function RecentTransactions() {
               <tr key={t.id} className="hover:bg-[#1a1a1a] transition-colors group">
                 <td className="py-4 flex items-center pr-4">
                   <div className="w-10 h-10 rounded-xl bg-[#222] border border-[#333] group-hover:border-[#444] flex items-center justify-center mr-4 transition-colors">
-                    {t.desc.includes('Receive') ? (
+                    {t.amount >= 0 ? (
                       <ArrowDownLeft className="w-4 h-4 text-green-400" />
                     ) : (
                       <ArrowUpRight className="w-4 h-4 text-red-400" />
                     )}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">{t.type}</p>
-                    <p className="text-xs text-[#888]">{t.desc}</p>
+                    <p className="text-sm font-medium text-white">{t.title}</p>
+                    <p className="text-xs text-[#888]">{t.amount >= 0 ? 'Receive' : 'Sent'} • {t.date}</p>
                   </div>
                 </td>
                 <td className="py-4 px-2">
-                  <p className={`text-sm font-medium ${t.desc.includes('Receive') ? 'text-green-400' : 'text-red-400'}`}>
-                    {t.desc.includes('Receive') ? '+' : '-'}{t.amount}
+                  <p className={`text-sm font-medium ${t.amount >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    {t.amount >= 0 ? '+' : '-'}{formatAbsoluteCurrency(t.amount)}
                   </p>
-                  <p className="text-[10px] text-[#888]">{t.curr}</p>
+                  <p className="text-[10px] text-[#888]">₹34,000 INR</p>
                 </td>
                 <td className="py-4 px-2">
-                  <TransactionBadge status={t.status} />
+                  <TransactionBadge status={t.category} />
                 </td>
                 <td className="py-4">
-                  <p className="text-sm text-white">{t.method}</p>
-                  <p className="text-xs text-[#888]">{t.methodDesc}</p>
+                  <p className="text-sm text-white">Bank Transfer</p>
+                  <p className="text-xs text-[#888]">**** 9052</p>
                 </td>
               </tr>
             ))}
