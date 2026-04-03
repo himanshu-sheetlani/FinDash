@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronRight, ArrowUpRight, ArrowDownLeft, ArrowBigRight } from 'lucide-react';
+import TransactionBadge from './TransactionBadge';
 
 function RecentTransactions() {
   const navigate = useNavigate();
@@ -11,18 +12,6 @@ function RecentTransactions() {
     { id: 3, type: 'Salary', desc: 'Receive • Mar 8, 2026', amount: '₹35,000', curr: '₹40,000 INR', status: 'Recieved', method: 'Bank Transfer', methodDesc: '**** 9052' },
     { id: 4, type: 'Full Stack Course', desc: 'Sent • Mar 2, 2026', amount: '₹500', curr: '₹5,000 INR', status: 'Learning', method: 'UPI', methodDesc: '**** 2093@upi' },
   ];
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'Essentials': return 'text-blue-400 border-blue-900/50 bg-blue-900/20'; 
-      case 'Recieved': return 'text-green-400 border-green-900/50 bg-green-900/20';
-      case 'Wants': return 'text-pink-400 border-pink-900/50 bg-pink-900/20';
-      case 'Saving': return 'text-yellow-400 border-yellow-900/50 bg-yellow-900/20';
-      case 'Dept': return 'text-red-400 border-red-900/50 bg-red-900/20';
-      case 'Learning': return 'text-purple-400 border-purple-900/50 bg-purple-900/20';
-      default: return 'text-gray-400 border-gray-700 bg-gray-800';
-    }
-  };
 
   return (
     <div className="md:col-span-8 bg-[#161616] border border-[#222] rounded-2xl p-6">
@@ -67,9 +56,7 @@ function RecentTransactions() {
                   <p className="text-[10px] text-[#888]">{t.curr}</p>
                 </td>
                 <td className="py-4 px-2">
-                  <span className={`inline-flex px-2 py-0.5 border text-[10px] font-medium rounded-full ${getStatusColor(t.status)}`}>
-                    {t.status}
-                  </span>
+                  <TransactionBadge status={t.status} />
                 </td>
                 <td className="py-4">
                   <p className="text-sm text-white">{t.method}</p>
