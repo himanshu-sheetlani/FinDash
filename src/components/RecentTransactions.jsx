@@ -57,7 +57,6 @@ function RecentTransactions() {
                   <p className={`text-sm font-medium ${t.amount >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                     {t.amount >= 0 ? '+' : '-'}{formatAbsoluteCurrency(t.amount)}
                   </p>
-                  <p className="text-[10px] text-[#888]">₹34,000 INR</p>
                 </td>
                 <td className="py-4 px-2">
                   <TransactionBadge status={t.category} />

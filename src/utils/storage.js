@@ -11,12 +11,34 @@ const DEFAULT_TRANSACTIONS = [
   { id: 8, title: "Credit Card Bill", date: "Feb 20, 2026", amount: -4500, category: "Dept" },
   { id: 9, title: "Movie Tickets", date: "Feb 18, 2026", amount: -800, category: "Wants" },
   { id: 10, title: "Udemy Subscription", date: "Feb 15, 2026", amount: -1200, category: "Learning" },
+  // Jan 2026
+  { id: 11, title: "House Rent", date: "Jan 15, 2026", amount: -5000, category: "Essentials" },
+  { id: 12, title: "Salary", date: "Jan 8, 2026", amount: 35000, category: "Recieved" },
+  { id: 13, title: "New Year Gifts", date: "Jan 4, 2026", amount: -2000, category: "Wants" },
+  { id: 14, title: "New Laptop", date: "Jan 2, 2026", amount: -32000, category: "Essentials" },
+  { id: 15, title: "Groceries", date: "Jan 12, 2026", amount: -3000, category: "Essentials" },
+  // Dec 2025
+  { id: 16, title: "House Rent", date: "Dec 15, 2025", amount: -5000, category: "Essentials" },
+  { id: 17, title: "Salary", date: "Dec 8, 2025", amount: 35000, category: "Recieved" },
+  { id: 18, title: "Holiday Vacation", date: "Dec 20, 2025", amount: -15000, category: "Saving" },
+  { id: 19, title: "Electricity Bill", date: "Dec 5, 2025", amount: -1500, category: "Dept" },
+  // Nov 2025
+  { id: 20, title: "House Rent", date: "Nov 15, 2025", amount: -5000, category: "Essentials" },
+  { id: 21, title: "Salary", date: "Nov 8, 2025", amount: 35000, category: "Recieved" },
+  { id: 22, title: "Diwali Sweet", date: "Nov 1, 2025", amount: -4000, category: "Wants" },
+  { id: 23, title: "React Workshop", date: "Nov 10, 2025", amount: -1000, category: "Learning" },
 ];
 
 export function getTransactions() {
   const stored = localStorage.getItem('transactions');
   if (stored) {
-    return JSON.parse(stored);
+    const parsed = JSON.parse(stored);
+    // Force reset dummy data if the user only has the original 10 short transactions
+    if (parsed.length <= 11) {
+      localStorage.setItem('transactions', JSON.stringify(DEFAULT_TRANSACTIONS));
+      return DEFAULT_TRANSACTIONS;
+    }
+    return parsed;
   }
   localStorage.setItem('transactions', JSON.stringify(DEFAULT_TRANSACTIONS));
   return DEFAULT_TRANSACTIONS;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import TransactionBadge from "../components/TransactionBadge";
 import { ArrowUpRight, ArrowDownLeft, Plus, X } from "lucide-react";
 import { getTransactions, addTransaction, formatCurrency } from "../utils/storage";
+import OverviewCharts from "../components/OverviewCharts";
 
 function Transaction() {
   const [activeTab, setActiveTab] = useState("transactions");
@@ -74,13 +75,13 @@ function Transaction() {
           <h2 className="text-3xl font-semibold text-white tracking-tight">
             Transactions
           </h2>
-          <p className="text-zinc-500 mt-1 text-sm">
+          <p className="text-[#888] mt-1 text-sm">
             A complete history of your transactions.
           </p>
         </div>
         <button 
           onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 bg-zinc-100 text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-white transition-colors"
+          className="flex items-center gap-2 text-xs text-white border border-[#333] hover:bg-[#222] px-4 py-2 rounded-lg transition-colors"
         >
           <Plus className="w-4 h-4" />
           Add Transaction
@@ -90,23 +91,23 @@ function Transaction() {
       {showAddModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-[#161616] border border-[#333] rounded-2xl w-full max-w-md p-6 relative">
-            <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-zinc-400 hover:text-white">
+            <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-[#888] hover:text-white">
               <X className="w-5 h-5" />
             </button>
             <h3 className="text-lg font-semibold text-white mb-4">Add Transaction</h3>
             <form onSubmit={handleAddSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs text-zinc-500 mb-1">Description</label>
-                <input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-zinc-600" placeholder="e.g. Netflix" />
+                <label className="block text-xs text-[#888] mb-1">Description</label>
+                <input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444] placeholder-[#666]" placeholder="e.g. Netflix" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Amount (₹)</label>
-                  <input type="number" required min="1" step="any" value={formData.amount} onChange={e => setFormData({...formData, amount: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-zinc-600" placeholder="0.00" />
+                  <label className="block text-xs text-[#888] mb-1">Amount (₹)</label>
+                  <input type="number" required min="1" step="any" value={formData.amount} onChange={e => setFormData({...formData, amount: e.target.value})} className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444] placeholder-[#666]" placeholder="0.00" />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Type</label>
-                  <select value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-zinc-600">
+                  <label className="block text-xs text-[#888] mb-1">Type</label>
+                  <select value={formData.type} onChange={e => setFormData({...formData, type: e.target.value})} className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444]">
                     <option value="expense">Expense (-)</option>
                     <option value="income">Income (+)</option>
                   </select>
@@ -114,8 +115,8 @@ function Transaction() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Category</label>
-                  <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-zinc-600">
+                  <label className="block text-xs text-[#888] mb-1">Category</label>
+                  <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444]">
                     <option value="Essentials">Essentials</option>
                     <option value="Wants">Wants</option>
                     <option value="Learning">Learning</option>
@@ -125,11 +126,11 @@ function Transaction() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-500 mb-1">Date</label>
-                  <input type="date" required value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-zinc-600" />
+                  <label className="block text-xs text-[#888] mb-1">Date</label>
+                  <input type="date" required value={formData.date} onChange={e => setFormData({...formData, date: e.target.value})} className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444]" />
                 </div>
               </div>
-              <button type="submit" className="w-full bg-white text-black font-semibold rounded-lg py-2 mt-4 hover:bg-zinc-200 transition-colors">
+              <button type="submit" className="w-full bg-white text-black font-semibold rounded-lg py-2 mt-4 hover:bg-[#e0e0e0] transition-colors">
                 Save 
               </button>
             </form>
@@ -137,45 +138,45 @@ function Transaction() {
         </div>
       )}
 
-      <div className="flex gap-2 mb-6 p-1 bg-zinc-950/50 border border-zinc-900 rounded-lg w-fit">
+      <div className="flex gap-2 mb-6 p-1 bg-[#161616] border border-[#222] rounded-xl w-fit">
         <button
           onClick={() => setActiveTab("transactions")}
-          className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === "transactions" ? "bg-zinc-800 text-white shadow-sm" : "text-zinc-500 hover:text-zinc-300"}`}
+          className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${activeTab === "transactions" ? "bg-[#222] text-white shadow-[0_0_8px_rgba(255,255,255,0.05)]" : "text-[#888] hover:text-[#bbb]"}`}
         >
           Transactions
         </button>
         <button
           onClick={() => setActiveTab("categories")}
-          className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === "categories" ? "bg-zinc-800 text-white shadow-sm" : "text-zinc-500 hover:text-zinc-300"}`}
+          className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${activeTab === "categories" ? "bg-[#222] text-white shadow-[0_0_8px_rgba(255,255,255,0.05)]" : "text-[#888] hover:text-[#bbb]"}`}
         >
-          Category Spending
+          Overview
         </button>
       </div>
 
       {activeTab === "transactions" ? (
-        <div className="bg-black rounded-xl border border-zinc-900 overflow-hidden">
+        <div className="bg-[#161616] rounded-2xl border border-[#222] overflow-hidden p-6 md:col-span-8">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left">
               <thead>
-                <tr className="bg-zinc-950 text-zinc-500 text-xs uppercase tracking-wider border-b border-zinc-900">
-                  <th className="font-semibold p-5 pl-8">Merchant</th>
-                  <th className="font-semibold p-5 hidden sm:table-cell">
+                <tr className="border-b border-[#222]">
+                  <th className="py-3 text-[12px] font-semibold text-white uppercase tracking-wider pl-4">Merchant</th>
+                  <th className="py-3 text-[12px] font-semibold text-white uppercase tracking-wider hidden sm:table-cell">
                     Category
                   </th>
-                  <th className="font-semibold p-5 hidden sm:table-cell">
+                  <th className="py-3 text-[12px] font-semibold text-white uppercase tracking-wider hidden sm:table-cell">
                     Date
                   </th>
-                  <th className="font-semibold p-5 pr-8 text-right">Amount</th>
+                  <th className="py-3 text-[12px] font-semibold text-white uppercase tracking-wider pr-4 text-right">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-900">
+              <tbody className="divide-y divide-[#222]">
                 {transactions.map((t) => (
                   <tr
                     key={t.id}
-                    className="hover:bg-zinc-900/40 transition-colors group"
+                    className="hover:bg-[#1a1a1a] transition-colors group"
                   >
-                    <td className="p-5 pl-8 flex items-center">
-                      <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mr-4 mt-1">
+                    <td className="py-4 pl-4 flex items-center">
+                      <div className="w-10 h-10 rounded-xl bg-[#222] border border-[#333] group-hover:border-[#444] flex items-center justify-center mr-4 transition-colors">
                         {t.amount >= 0 ? (
                           <ArrowDownLeft className="w-4 h-4 text-emerald-400" />
                         ) : (
@@ -183,20 +184,20 @@ function Transaction() {
                         )}
                       </div>
                       <div>
-                        <p className="font-medium text-white">{t.title}</p>
-                        <p className="text-xs text-zinc-500 sm:hidden mt-1">
+                        <p className="text-sm font-medium text-white">{t.title}</p>
+                        <p className="text-xs text-[#888] sm:hidden mt-1">
                           {t.date}
                         </p>
                       </div>
                     </td>
-                    <td className="p-5 hidden sm:table-cell">
+                    <td className="py-4 hidden sm:table-cell">
                       <TransactionBadge status={t.category} />
                     </td>
-                    <td className="p-5 text-zinc-500 text-sm hidden sm:table-cell">
+                    <td className="py-4 text-[#888] text-[10px] hidden sm:table-cell">
                       {t.date}
                     </td>
                     <td
-                      className={`p-5 pr-8 text-right font-medium ${t.amount >= 0 ? "text-emerald-400" : "text-red-400"}`}
+                      className={`py-4 pr-4 text-right text-sm font-medium ${t.amount >= 0 ? "text-emerald-400" : "text-red-400"}`}
                     >
                       {formatCurrency(t.amount)}
                     </td>
@@ -207,32 +208,7 @@ function Transaction() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {categorySpending.map((cat) => (
-            <div
-              key={cat.category}
-              className="bg-black border border-zinc-900 p-5 rounded-xl hover:bg-zinc-900/20 transition-colors"
-            >
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-white font-medium">{cat.category}</span>
-                <span className="text-zinc-400 text-sm">
-                  ₹{cat.amount.toLocaleString('en-IN')} /{" "}
-                  <span className="text-zinc-500">
-                    ₹{cat.budget.toLocaleString('en-IN')}
-                  </span>
-                </span>
-              </div>
-              <div className="w-full bg-zinc-900 h-2 rounded-full overflow-hidden">
-                <div
-                  className={`${cat.color} h-full rounded-full shadow-[0_0_8px_currentColor] opacity-80`}
-                  style={{
-                    width: `${Math.min((cat.amount / cat.budget) * 100, 100)}%`,
-                  }}
-                ></div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <OverviewCharts transactions={transactions} />
       )}
     </>
   );
