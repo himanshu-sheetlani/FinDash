@@ -55,11 +55,11 @@ function CalendarCard() {
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:flex flex-col bg-[#222] border border-[#333] text-[10px] rounded p-1.5 shadow-xl w-max min-w-[90px] pointer-events-none">
                   <div className="flex justify-between items-center gap-3">
                     <span className="text-[#888]">Earn</span>
-                    <span className="text-green-400 font-medium">+${earned}</span>
+                    <span className="text-green-400 font-medium">+₹{earned}</span>
                   </div>
                   <div className="flex justify-between items-center gap-3 mt-1">
                     <span className="text-[#888]">Spend</span>
-                    <span className="text-red-400 font-medium">-${expense}</span>
+                    <span className="text-red-400 font-medium">-₹{expense}</span>
                   </div>
                 </div>
               )}
