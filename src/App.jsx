@@ -5,6 +5,7 @@ import DashboardLayout from './components/DashboardLayout';
 import Dashboard from './pages/Dashboard';
 import Transaction from './pages/Transaction';
 import Goals from './pages/Goals';
+import Billing from './pages/Billing';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/transaction" element={<Transaction />} />
           <Route path="/goals" element={<Goals />} />
+          <Route path="/billing" element={<Billing />} />
         </Route>
       </Routes>
     </BrowserRouter>

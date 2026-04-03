@@ -54,14 +54,13 @@ function Sidebar() {
             <Database className="w-5 h-5 mr-3" />
             Investment
           </a>
-          <a href="#" className="flex items-center px-4 py-3 rounded-xl text-[#888] hover:text-white hover:bg-[#1a1a1a] transition-all">
-            <CreditCard className="w-5 h-5 mr-3" />
+          <Link 
+            to="/billing" 
+            className={`flex items-center px-4 py-3 rounded-xl transition-all ${path === '/billing' ? 'bg-cyan-200 text-black font-medium' : 'text-[#888] hover:text-white hover:bg-[#1a1a1a]'}`}
+          >
+            <CreditCard className={`w-5 h-5 mr-3 ${path === '/billing' ? 'text-black' : 'text-[#888]'}`} />
             Bills and Payment
-          </a>
-          <a href="#" className="flex items-center px-4 py-3 rounded-xl text-[#888] hover:text-white hover:bg-[#1a1a1a] transition-all">
-            <BarChart2 className="w-5 h-5 mr-3" />
-            Analytics and Reports
-          </a>
+          </Link>
         </nav>
 
         <p className="text-[#666] text-[11px] font-semibold tracking-widest uppercase mb-3 px-2">Support</p>
