@@ -1,4 +1,5 @@
 const INITIAL_BALANCE = 10000;
+const USER_STORAGE_KEY = 'finance_dashboard_user';
 
 const DEFAULT_TRANSACTIONS = [
   { id: 1, title: "House Rent", date: "Mar 15, 2026", amount: -5000, category: "Essentials" },
@@ -41,6 +42,39 @@ export function getTransactions() {
   }
   localStorage.setItem('transactions', JSON.stringify(DEFAULT_TRANSACTIONS));
   return DEFAULT_TRANSACTIONS;
+}
+
+export function getStoredUser() {
+  const stored = localStorage.getItem(USER_STORAGE_KEY);
+  if (!stored) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(stored);
+    if (parsed?.name && parsed?.email) {
+      return parsed;
+    }
+  } catch (error) {
+    console.error('Failed to parse stored user', error);
+  }
+
+  localStorage.removeItem(USER_STORAGE_KEY);
+  return null;
+}
+
+export function saveUser(user) {
+  const normalizedUser = {
+    name: user.name.trim(),
+    email: user.email.trim().toLowerCase(),
+  };
+
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(normalizedUser));
+  return normalizedUser;
+}
+
+export function clearStoredUser() {
+  localStorage.removeItem(USER_STORAGE_KEY);
 }
 
 export function addTransaction(transaction) {
