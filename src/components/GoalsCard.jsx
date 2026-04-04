@@ -60,7 +60,7 @@ function GoalsCard() {
               </div>
               <div className="w-full bg-[#2a2a2a] h-1.5 rounded-full overflow-hidden relative">
                 <div 
-                  className={`h-full rounded-full transition-all duration-1000 ease-out ${percent >= 100 ? 'bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.6)]' : 'bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.6)]'}`}
+                  className={`h-full rounded-full transition-all duration-1000 ease-out ${percent >= 100 ? 'bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.6)]' : 'bg-cyan-200 shadow-[0_0_8px_rgba(34,211,238,0.6)]'}`}
                   style={{ width: `${percent}%` }}
                 ></div>
               </div>

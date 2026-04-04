@@ -45,7 +45,7 @@ export default function FundGoalModal({ selectedGoal, onClose }) {
             />
             <p className="text-[10px] text-[#555] mt-1">This will deduct from your actual balance by instantly recording a unique saving transaction.</p>
           </div>
-          <button type="submit" className="w-full bg-cyan-400 text-black font-semibold rounded-lg py-2 mt-4 hover:bg-cyan-300 transition-colors shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+          <button type="submit" className="w-full bg-cyan-200 text-black font-semibold rounded-lg py-2 mt-4 hover:bg-cyan-300 transition-colors shadow-[0_0_15px_rgba(34,211,238,0.2)]">
             Deposit Funds
           </button>
         </form>

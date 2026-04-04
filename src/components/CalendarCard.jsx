@@ -25,7 +25,7 @@ function CalendarCard() {
 
       <div className="grid grid-cols-7 gap-y-2 gap-x-1 text-center">
         {['S','M','T','W','T','F','S'].map((day, i) => (
-          <div key={i} className="text-[10px] font-medium text-cyan-400 font-semibold mb-1">{day}</div>
+          <div key={i} className="text-[10px] font-medium text-cyan-200 font-semibold mb-1">{day}</div>
         ))}
         {[...Array(31)].map((_, i) => {
           const dayNum = i + 1;
@@ -42,7 +42,7 @@ function CalendarCard() {
           return (
             <div key={i} className="relative group hover:z-30 flex justify-center items-center h-8">
               <span className={`relative w-7 h-7 flex items-center justify-center rounded-full text-xs transition-colors cursor-pointer
-                ${dayNum == isToday ? 'bg-cyan-400 text-black font-semibold' : 
+                ${dayNum == isToday ? 'bg-cyan-200 text-black font-semibold' : 
                   dayNum > isToday ? 'text-[#555]' : 'text-white hover:bg-[#222]'}`}
               >
                 {dayNum}

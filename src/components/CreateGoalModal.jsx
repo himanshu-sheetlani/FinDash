@@ -58,7 +58,7 @@ export default function CreateGoalModal({ onClose }) {
                   type="button" 
                   key={key}
                   onClick={() => setCreateData({...createData, icon: key})}
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-all ${createData.icon === key ? 'bg-[#222] border-cyan-400 text-cyan-400' : 'bg-[#1a1a1a] border-[#333] text-[#888] hover:border-[#555] hover:text-white'}`}
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-all ${createData.icon === key ? 'bg-[#222] border-cyan-200 text-cyan-200' : 'bg-[#1a1a1a] border-[#333] text-[#888] hover:border-[#555] hover:text-white'}`}
                 >
                   {React.cloneElement(ICON_MAP[key], { className: "w-4 h-4" })}
                 </button>

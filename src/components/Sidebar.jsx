@@ -72,13 +72,12 @@ function Sidebar() {
         </nav>
       </div>
 
-      {/* Pro Card */}
       <div className="p-4 mt-auto">
         <div className="bg-gradient-to-b from-[#222] to-[#121212] rounded-2xl p-5 border border-[#333] text-center shadow-lg relative overflow-hidden">
-          <div className="absolute inset-0 bg-cyan-400/[0.02]"></div>
+          <div className="absolute inset-0 bg-cyan-200/[0.02]"></div>
           <h3 className="text-white font-semibold mb-1 relative z-10">Become Pro Access</h3>
           <p className="text-[#888] text-xs mb-4 leading-relaxed relative z-10">Try your experience for using more features</p>
-          <button className="w-full bg-cyan-400 hover:bg-cyan-300 text-black font-semibold py-2.5 rounded-xl transition-colors relative z-10 flex items-center justify-center text-sm shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+          <button className="w-full bg-cyan-200 hover:bg-cyan-300 text-black font-semibold py-2.5 rounded-xl transition-colors relative z-10 flex items-center justify-center text-sm shadow-[0_0_15px_rgba(34,211,238,0.3)]">
             <Zap className="w-4 h-4 mr-2" />
             Upgrade Pro
           </button>
