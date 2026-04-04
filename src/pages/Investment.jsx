@@ -9,7 +9,6 @@ function Investment() {
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(false);
   
-  // Search State
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -28,7 +27,6 @@ function Investment() {
 
   const [savedSymbols, setSavedSymbols] = useState([]);
 
-  // Fetch stocks when list or apikey updates
   useEffect(() => {
     if (apiKey && savedSymbols.length > 0) {
       fetchStockData(savedSymbols);
@@ -41,13 +39,12 @@ function Investment() {
     setLoading(true);
     const newStocks = [];
     let cacheMap = memoryCache;
-    const CACHE_LIFETIME = 60 * 60 * 1000; // 1 hour
+    const CACHE_LIFETIME = 60 * 60 * 1000; 
 
     for (const sym of symbolsToFetch) {
       const now = Date.now();
       const cachedData = cacheMap[sym];
 
-      // Use cache if perfectly valid
       if (!forceRefresh && cachedData && (now - cachedData.timestamp < CACHE_LIFETIME)) {
         newStocks.push(cachedData.data);
       } else {
@@ -66,7 +63,6 @@ function Investment() {
             newStocks.push(data);
           } else {
              console.warn("Finnhub Error / Invalid Symbol:", raw);
-             // retain old cache if we hit rate limits or errors
              if (cachedData) newStocks.push(cachedData.data);
           }
         } catch (e) {
@@ -76,7 +72,6 @@ function Investment() {
       }
     }
     
-    // Memory cache is updated directly
     
     setStocks(newStocks);
     setLoading(false);
@@ -84,7 +79,6 @@ function Investment() {
 
 
 
-  // Safe wrapper for searching symbols via API
   const executeSearch = async (e) => {
     e.preventDefault();
     if (!searchQuery.trim() || !apiKey) return;
@@ -132,9 +126,7 @@ function Investment() {
         </div>
       </header>
 
-      {/* PORTFOLIO OVERVIEW */}
       <div className="bg-[#161616] border border-[#222] rounded-2xl p-6 mb-8 flex flex-col md:flex-row justify-end md:items-center shadow-lg gap-6">
-        
         <div className="relative z-20">
           <form onSubmit={executeSearch} className="flex gap-2">
             <div className="relative">
@@ -146,7 +138,6 @@ function Investment() {
             </button>
           </form>
           
-          {/* SEARCH DROPDOWN */}
           {searchResults.length > 0 && (
             <div className="absolute top-full right-0 left-0 mt-2 bg-[#161616] border border-[#333] rounded-xl shadow-2xl overflow-hidden py-1">
               <div className="flex justify-between items-center px-4 py-2 bg-[#111] border-b border-[#222]">
@@ -176,7 +167,6 @@ function Investment() {
         </div>
       </div>
       
-      {/* INITIAL FAMOUS STOCKS SUGGESTIONS */}
       {savedSymbols.length === 0 && !loading && (
         <div className="mb-10 bg-[#161616] border border-dashed border-[#333] rounded-2xl p-8 text-center flex flex-col items-center">
           <p className="text-white text-lg font-medium mb-2">Build Your Portfolio</p>
@@ -197,7 +187,6 @@ function Investment() {
         </div>
       )}
 
-      {/* STOCK CARDS GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {stocks.map((stock) => {
           const isPos = stock.change >= 0;

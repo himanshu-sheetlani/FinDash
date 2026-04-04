@@ -10,9 +10,11 @@ function Sidebar() {
     <aside className="w-full xl:w-[260px] bg-[#121212] border-r border-[#222] flex flex-col xl:h-screen xl:sticky xl:top-0">
       <div className="p-6 pb-2">
         <div className="flex items-center space-x-3 mb-8">
-          <div className="w-8 h-8 rounded-full bg-cyan-200 flex items-center justify-center">
-            <div className="w-4 h-4 bg-black rotate-45 transform"></div>
-          </div>
+          <img
+            src="/Logo.webp"
+            alt="FinDash logo"
+            className="w-10 h-10 rounded-xl object-contain bg-white/5 p-1"
+          />
           <div>
             <h1 className="font-bold text-white text-base leading-none">FinDash</h1>
             <p className="text-[#7d7d7d] text-xs mt-0.5">Financial Assistant</p>
