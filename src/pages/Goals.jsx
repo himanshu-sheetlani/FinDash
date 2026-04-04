@@ -1,72 +1,217 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Plus, X, ArrowUpRight, TrendingUp, Home, Car, Plane, Laptop, Book, Heart, Trash2 } from "lucide-react";
+import confetti from "canvas-confetti";
+
+const ICON_MAP = {
+  TrendingUp: <TrendingUp className="w-5 h-5" />,
+  Home: <Home className="w-5 h-5" />,
+  Car: <Car className="w-5 h-5" />,
+  Plane: <Plane className="w-5 h-5" />,
+  Laptop: <Laptop className="w-5 h-5" />,
+  Book: <Book className="w-5 h-5" />,
+  Heart: <Heart className="w-5 h-5" />
+};
+import { getGoals, addGoal, addFundsToGoal, removeGoal, formatAbsoluteCurrency } from "../utils/storage";
 
 function Goals() {
-  const goals = [
-    { title: 'Real Estate Fund', target: 100000, current: 82000 },
-    { title: 'Porsche 911', target: 145000, current: 25000 },
-    { title: 'World Tour', target: 30000, current: 28000 },
-  ];
+  const [goals, setGoals] = useState([]);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showFundModal, setShowFundModal] = useState(false);
+  const [selectedGoal, setSelectedGoal] = useState(null);
+
+  const [createData, setCreateData] = useState({ title: "", target: "", icon: "" });
+  const [fundAmount, setFundAmount] = useState("");
+
+  useEffect(() => {
+    const fetchGoals = () => setGoals(getGoals());
+    fetchGoals();
+    window.addEventListener('goals_updated', fetchGoals);
+    return () => window.removeEventListener('goals_updated', fetchGoals);
+  }, []);
+
+  const handleCreateSubmit = (e) => {
+    e.preventDefault();
+    if (!createData.title || !createData.target) return;
+    addGoal({ title: createData.title, target: parseFloat(createData.target), icon: createData.icon });
+    setShowCreateModal(false);
+    setCreateData({ title: "", target: "", icon: "TrendingUp" });
+  };
+
+  const handleFundSubmit = (e) => {
+    e.preventDefault();
+    if (!fundAmount || !selectedGoal) return;
+    
+    // Confetti logic
+    const oldCurrent = selectedGoal.current;
+    const newCurrent = oldCurrent + parseFloat(fundAmount);
+    if (newCurrent >= selectedGoal.target && oldCurrent < selectedGoal.target) {
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#22d3ee', '#10b981', '#3b82f6', '#ffffff'] // cyan, emerald, blue, white
+      });
+    }
+
+    addFundsToGoal(selectedGoal.id, fundAmount);
+    setShowFundModal(false);
+    setFundAmount("");
+    setSelectedGoal(null);
+  };
+
+  const openFundModal = (goal) => {
+    setSelectedGoal(goal);
+    setShowFundModal(true);
+  };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col md:flex-row text-zinc-200 font-sans">
-      <aside className="w-full md:w-64 bg-black border-r border-zinc-900 p-6 flex flex-col pt-10 hidden md:flex">
-        <h1 className="text-xl font-extrabold text-white tracking-widest uppercase mb-12">FinDash</h1>
-        <nav className="flex-1 space-y-1">
-          <Link to="/dashboard" className="block px-4 py-2.5 text-zinc-400 hover:text-white hover:bg-zinc-900/50 rounded-md transition-colors">Overview</Link>
-          <Link to="/transaction" className="block px-4 py-2.5 text-zinc-400 hover:text-white hover:bg-zinc-900/50 rounded-md transition-colors">Transactions</Link>
-          <Link to="/goals" className="block px-4 py-2.5 bg-zinc-900 text-white font-medium rounded-md border border-zinc-800">Goals</Link>
-        </nav>
-      </aside>
+    <>
+      <header className="mb-12 flex items-end justify-between">
+        <div>
+          <h2 className="text-3xl font-semibold text-white tracking-tight">Goals</h2>
+          <p className="text-[#888] mt-1 text-sm">Milestones for your wealth accumulation.</p>
+        </div>
+        <button 
+          onClick={() => setShowCreateModal(true)}
+          className="flex items-center gap-2 text-xs text-white border border-[#333] hover:bg-[#222] px-4 py-2 rounded-lg transition-colors"
+        >
+          <Plus className="w-4 h-4" />
+          Create Goal
+        </button>
+      </header>
 
-      <main className="flex-1 p-6 md:p-10 max-w-5xl mx-auto w-full">
-        <header className="mb-12 flex items-end justify-between">
-          <div>
-            <h2 className="text-3xl font-semibold text-white tracking-tight">Objectives</h2>
-            <p className="text-zinc-500 mt-1 text-sm">Milestones for your wealth accumulation.</p>
-          </div>
-          <button className="bg-white text-black hover:bg-zinc-200 px-5 py-2 rounded-md text-sm font-semibold transition-colors">
-            Create Goal
-          </button>
-        </header>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {goals.map((goal, i) => {
-            const percent = Math.min(100, Math.round((goal.current / goal.target) * 100));
-            return (
-              <div key={i} className="bg-black border border-zinc-900 hover:border-zinc-700 transition-colors rounded-xl p-8 relative overflow-hidden">
-                <div className="flex justify-between items-end mb-6 relative z-10">
-                  <h3 className="text-lg font-medium text-white tracking-tight">{goal.title}</h3>
-                  <div className="text-right">
-                    <p className="text-2xl font-light text-white">${goal.current.toLocaleString()}</p>
-                    <p className="text-xs text-zinc-500 font-medium uppercase tracking-wider mt-1">Goal: ${goal.target.toLocaleString()}</p>
-                  </div>
-                </div>
-                
-                <div className="w-full bg-zinc-900 rounded-full h-1.5 mb-3 overflow-hidden">
-                  <div 
-                    className="bg-zinc-300 h-full rounded-full transition-all duration-1000 ease-out" 
-                    style={{ width: `${percent}%` }}
-                  ></div>
-                </div>
-                
-                <p className="text-xs font-semibold text-zinc-500 text-right">{percent}% ACHIEVED</p>
+      {/* CREATE MODAL */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#161616] border border-[#333] rounded-2xl w-full max-w-sm p-6 relative">
+            <button onClick={() => setShowCreateModal(false)} className="absolute top-4 right-4 text-[#888] hover:text-white">
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-lg font-semibold text-white mb-4">New Objective</h3>
+            <form onSubmit={handleCreateSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs text-[#888] mb-1">Goal Title</label>
+                <input type="text" required value={createData.title} onChange={e => setCreateData({...createData, title: e.target.value})} className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444] placeholder-[#666]" placeholder="e.g. Dream House" />
               </div>
-            );
-          })}
-
-          <div className="bg-black border border-dashed border-zinc-800 hover:border-zinc-600 rounded-xl p-8 flex flex-col items-center justify-center text-center transition-colors cursor-pointer min-h-[220px]">
-            <div className="w-10 h-10 rounded-full bg-zinc-900 text-white flex items-center justify-center mb-4">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 1V13M1 7H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-            </div>
-            <h3 className="text-sm font-medium text-white uppercase tracking-wider mb-1">New Objective</h3>
-            <p className="text-xs text-zinc-500">Define a new financial target</p>
+              <div>
+                <label className="block text-xs text-[#888] mb-1">Target Amount (₹)</label>
+                <input type="number" required min="1" step="any" value={createData.target} onChange={e => setCreateData({...createData, target: e.target.value})} className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444] placeholder-[#666]" placeholder="1000000" />
+              </div>
+              <div>
+                <label className="block text-xs text-[#888] mb-2">Select Icon</label>
+                <div className="flex flex-wrap gap-2">
+                  {Object.keys(ICON_MAP).map(key => (
+                    <button 
+                      type="button" 
+                      key={key}
+                      onClick={() => setCreateData({...createData, icon: key})}
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-all ${createData.icon === key ? 'bg-[#222] border-cyan-400 text-cyan-400' : 'bg-[#1a1a1a] border-[#333] text-[#888] hover:border-[#555] hover:text-white'}`}
+                    >
+                      {React.cloneElement(ICON_MAP[key], { className: "w-4 h-4" })}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <button type="submit" className="w-full bg-white text-black font-semibold rounded-lg py-2 mt-4 hover:bg-[#e0e0e0] transition-colors">
+                Save Goal
+              </button>
+            </form>
           </div>
         </div>
-      </main>
-    </div>
+      )}
+
+      {showFundModal && selectedGoal && (
+       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#161616] border border-[#333] rounded-2xl w-full max-w-sm p-6 relative">
+            <button onClick={() => {setShowFundModal(false); setSelectedGoal(null);}} className="absolute top-4 right-4 text-[#888] hover:text-white">
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-lg font-semibold text-white mb-4">Add Funds to {selectedGoal.title}</h3>
+            <form onSubmit={handleFundSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs text-[#888] mb-1">Amount to Add (₹)</label>
+                <input type="number" required min="1" step="any" value={fundAmount} onChange={e => setFundAmount(e.target.value)} className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444] placeholder-[#666]" placeholder="5000" />
+                <p className="text-[10px] text-[#555] mt-1">This will deduct from your actual balance by instantly recording a unique saving transaction.</p>
+              </div>
+              <button type="submit" className="w-full bg-cyan-400 text-black font-semibold rounded-lg py-2 mt-4 hover:bg-cyan-300 transition-colors shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                Deposit Funds
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        {goals.map((goal, i) => {
+          const percent = Math.min(100, Math.round((goal.current / goal.target) * 100));
+          const isCompleted = percent >= 100;
+          const GoalIcon = ICON_MAP[goal.icon] || ICON_MAP.TrendingUp;
+          
+          return (
+            <div key={goal.id || i} className={`bg-[#161616] border ${isCompleted ? 'border-cyan-500/40 shadow-[0_0_20px_rgba(34,211,238,0.05)]' : 'border-[#222] hover:border-[#333]'} transition-all duration-300 rounded-2xl p-6 relative overflow-hidden group`}>
+              {isCompleted && (
+                <div className="absolute -right-8 top-5 bg-cyan-500/20 text-cyan-400 text-[9px] font-bold py-1 px-10 rotate-45 border-b border-cyan-500/30">
+                  COMPLETED
+                </div>
+              )}
+              <div className="flex justify-between items-start mb-6 relative z-10">
+                <div className="flex items-center gap-3">
+                   <div className="w-10 h-10 rounded-xl bg-[#222] border border-[#333] flex items-center justify-center text-cyan-400">
+                     {React.cloneElement(GoalIcon, { className: "w-4 h-4" })}
+                   </div>
+                   <h3 className="text-lg font-medium text-white tracking-tight">{goal.title}</h3>
+                </div>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => removeGoal(goal.id)}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-500 p-2 rounded-lg text-xs flex items-center justify-center"
+                    title="Remove Goal"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                  {!isCompleted && (
+                    <button 
+                      onClick={() => openFundModal(goal)}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity bg-[#222] border border-[#333] hover:border-[#444] text-white p-2 rounded-lg text-xs flex items-center gap-1"
+                    >
+                      <Plus className="w-3 h-3" />
+                      Add Funds
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-between items-end mb-2 relative z-10">
+                 <p className="text-2xl font-light text-white">{formatAbsoluteCurrency(goal.current)}</p>
+                 <p className="text-xs text-[#888] font-medium tracking-wide">Goal: {formatAbsoluteCurrency(goal.target)}</p>
+              </div>
+              
+              <div className="w-full bg-[#2a2a2a] rounded-full h-1.5 mb-3 overflow-hidden relative z-10">
+                <div
+                  className="bg-cyan-400 h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_8px_rgba(34,211,238,0.5)]"
+                  style={{ width: `${percent}%` }}
+                ></div>
+              </div>
+
+              <p className="text-[10px] font-semibold text-[#666] tracking-wider text-right">
+                {percent}% ACHIEVED
+              </p>
+            </div>
+          );
+        })}
+
+        <div 
+          onClick={() => setShowCreateModal(true)}
+          className="bg-[#1a1a1a] border border-dashed border-[#333] hover:border-[#555] rounded-2xl p-8 flex flex-col items-center justify-center text-center transition-colors cursor-pointer min-h-[220px]"
+        >
+          <div className="w-10 h-10 rounded-full bg-[#222] text-white flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
+            <Plus className="w-5 h-5 text-[#888]" />
+          </div>
+          <h3 className="text-sm font-medium text-white tracking-wide mb-1">New Objective</h3>
+          <p className="text-xs text-[#666]">Define a new financial target</p>
+        </div>
+      </div>
+    </>
   );
 }
 

@@ -33,7 +33,6 @@ export function getTransactions() {
   const stored = localStorage.getItem('transactions');
   if (stored) {
     const parsed = JSON.parse(stored);
-    // Force reset dummy data if the user only has the original 10 short transactions
     if (parsed.length <= 11) {
       localStorage.setItem('transactions', JSON.stringify(DEFAULT_TRANSACTIONS));
       return DEFAULT_TRANSACTIONS;
@@ -52,7 +51,6 @@ export function addTransaction(transaction) {
   };
   const newTransactions = [newTx, ...transactions];
   localStorage.setItem('transactions', JSON.stringify(newTransactions));
-  // dispatch custom event for cross-component reactivity
   window.dispatchEvent(new Event('transactions_updated'));
   return newTransactions;
 }
@@ -74,4 +72,58 @@ export function formatAbsoluteCurrency(amount) {
   const absAmount = Math.abs(amount);
   const formatted = new Intl.NumberFormat('en-IN').format(absAmount);
   return `₹${formatted}`;
+}
+
+const DEFAULT_GOALS = [
+  { id: 1, title: "Annual Vacation", target: 12000, current: 8000, icon: "Plane" },
+  { id: 2, title: "Car", target: 500000, current: 75000, icon: "Car" },
+  { id: 3, title: "House", target: 3000000, current: 28000, icon: "Home" },
+];
+
+export function getGoals() {
+  const stored = localStorage.getItem('goals');
+  if (stored) {
+    return JSON.parse(stored);
+  }
+  localStorage.setItem('goals', JSON.stringify(DEFAULT_GOALS));
+  return DEFAULT_GOALS;
+}
+
+export function addGoal(goalData) {
+  const goals = getGoals();
+  const newGoal = {
+    ...goalData,
+    id: Date.now(),
+    current: 0
+  };
+  const newGoals = [...goals, newGoal];
+  localStorage.setItem('goals', JSON.stringify(newGoals));
+  window.dispatchEvent(new Event('goals_updated'));
+  return newGoals;
+}
+
+export function addFundsToGoal(goalId, amount) {
+  const goals = getGoals();
+  const index = goals.findIndex(g => g.id === goalId);
+  if (index !== -1) {
+    goals[index].current += parseFloat(amount);
+    localStorage.setItem('goals', JSON.stringify(goals));
+    window.dispatchEvent(new Event('goals_updated'));
+
+    addTransaction({
+      title: `Funded ${goals[index].title}`,
+      amount: -Math.abs(amount),
+      category: 'Saving',
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    });
+  }
+  return goals;
+}
+
+export function removeGoal(goalId) {
+  const goals = getGoals();
+  const newGoals = goals.filter(g => g.id !== goalId);
+  localStorage.setItem('goals', JSON.stringify(newGoals));
+  window.dispatchEvent(new Event('goals_updated'));
+  return newGoals;
 }

@@ -1,9 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Luggage , Car, ChevronRight } from 'lucide-react';
+import { ChevronRight, TrendingUp, Home, Car, Plane, Laptop, Book, Heart } from 'lucide-react';
+import { getGoals, formatAbsoluteCurrency } from '../utils/storage';
+
+const ICON_MAP = {
+  TrendingUp: <TrendingUp className="w-4 h-4 text-cyan-200" />,
+  Home: <Home className="w-4 h-4 text-cyan-200" />,
+  Car: <Car className="w-4 h-4 text-cyan-200" />,
+  Plane: <Plane className="w-4 h-4 text-cyan-200" />,
+  Laptop: <Laptop className="w-4 h-4 text-cyan-200" />,
+  Book: <Book className="w-4 h-4 text-cyan-200" />,
+  Heart: <Heart className="w-4 h-4 text-cyan-200" />
+};
 
 function GoalsCard() {
   const navigate = useNavigate();
+  const [goals, setGoals] = useState([]);
+
+  useEffect(() => {
+    const fetchGoals = () => {
+      setGoals(getGoals());
+    };
+    fetchGoals();
+    window.addEventListener('goals_updated', fetchGoals);
+    return () => window.removeEventListener('goals_updated', fetchGoals);
+  }, []);
+
   return (
     <div className="md:col-span-4 bg-[#161616] border border-[#222] rounded-2xl p-6">
       <div className="flex justify-between items-center mb-6">
@@ -16,42 +38,38 @@ function GoalsCard() {
       <hr className="border-[#333] mb-4" />
 
       <div className="space-y-4">
-        <div className="bg-[#1c1c1c] border border-[#2a2a2a] rounded-xl p-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center">
-              <div className="w-8 h-8 rounded-lg bg-[#252525] flex items-center justify-center mr-3">
-                <Luggage className="w-4 h-4 text-cyan-200" />
+        {goals.slice(0, 3).map((goal) => {
+          const percent = Math.min(100, Math.round((goal.current / goal.target) * 100));
+          const GoalIcon = ICON_MAP[goal.icon] || ICON_MAP.TrendingUp;
+          return (
+            <div key={goal.id} className="bg-[#1c1c1c] border border-[#2a2a2a] rounded-xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center">
+                  <div className="w-8 h-8 rounded-lg bg-[#252525] flex items-center justify-center mr-3">
+                    {GoalIcon}
+                  </div>
+                  <div>
+                    <p className="text-sm text-white font-medium">{goal.title}</p>
+                    <p className="text-[10px] text-[#888]">{percent}% Achieved</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium text-white">{formatAbsoluteCurrency(goal.current)}</p>
+                  <p className="text-[9px] text-[#888]">of {formatAbsoluteCurrency(goal.target)}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-white font-medium">Annual Vacation</p>
-                <p className="text-[10px] text-[#888]">Achieve in 3 Months!</p>
-              </div>
-            </div>
-            <p className="text-sm font-medium text-white">₹12,000</p>
-          </div>
-          <div className="w-full bg-[#2a2a2a] h-1.5 rounded-full overflow-hidden">
-            <div className="bg-cyan-400 h-full rounded-full shadow-[0_0_8px_rgba(34,211,238,0.6)]" style={{ width: '70%' }}></div>
-          </div>
-        </div>
-
-        <div className="bg-[#1c1c1c] border border-[#2a2a2a] rounded-xl p-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center">
-              <div className="w-8 h-8 rounded-lg bg-[#252525] flex items-center justify-center mr-3">
-                <Car className="w-4 h-4 text-cyan-200" />
-              </div>
-              <div>
-                <p className="text-sm text-white font-medium">Car</p>
-                <p className="text-[10px] text-[#888]">Achieve in 3 Year!</p>
+              <div className="w-full bg-[#2a2a2a] h-1.5 rounded-full overflow-hidden relative">
+                <div 
+                  className={`h-full rounded-full transition-all duration-1000 ease-out ${percent >= 100 ? 'bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.6)]' : 'bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.6)]'}`}
+                  style={{ width: `${percent}%` }}
+                ></div>
               </div>
             </div>
-            <p className="text-sm font-medium text-white">₹5,00,000</p>
-          </div>
-          {/* Progress Bar */}
-          <div className="w-full bg-[#2a2a2a] h-1.5 rounded-full overflow-hidden">
-            <div className="bg-cyan-400 h-full rounded-full shadow-[0_0_8px_rgba(34,211,238,0.6)]" style={{ width: '27%' }}></div>
-          </div>
-        </div>
+          );
+        })}
+        {goals.length === 0 && (
+          <p className="text-[#888] text-xs text-center py-4">No goals created yet.</p>
+        )}
       </div>
     </div>
   );
