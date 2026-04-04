@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Plus, X } from "lucide-react";
+import React, { useMemo, useState, useEffect } from "react";
+import { Download, Plus, X } from "lucide-react";
 import { getTransactions, addTransaction } from "../utils/storage";
 import OverviewCharts from "../components/OverviewCharts";
 import TransactionList from "../components/TransactionList";
@@ -8,6 +8,11 @@ function Transaction() {
   const [activeTab, setActiveTab] = useState("transactions");
   const [transactions, setTransactions] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [filters, setFilters] = useState({
+    type: "all",
+    category: "all",
+    sortBy: "date_desc",
+  });
   const [formData, setFormData] = useState({
     title: "",
     amount: "",
@@ -44,6 +49,46 @@ function Transaction() {
     setFormData({ title: "", amount: "", type: "expense", category: "Essentials", date: "" });
   };
 
+  const handleExportTransactions = () => {
+    if (filteredTransactions.length === 0) {
+      return;
+    }
+
+    const escapeCsvValue = (value) => {
+      const stringValue = String(value ?? "");
+      if (stringValue.includes(",") || stringValue.includes('"') || stringValue.includes("\n")) {
+        return `"${stringValue.replace(/"/g, '""')}"`;
+      }
+      return stringValue;
+    };
+
+    const csvRows = [
+      ["Title", "Category", "Date", "Type", "Amount"],
+      ...filteredTransactions.map((transaction) => [
+        transaction.title,
+        transaction.category,
+        transaction.date,
+        transaction.amount >= 0 ? "Income" : "Expense",
+        transaction.amount,
+      ]),
+    ];
+
+    const csvContent = csvRows
+      .map((row) => row.map(escapeCsvValue).join(","))
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const exportDate = new Date().toISOString().slice(0, 10);
+
+    link.href = url;
+    link.download = `transactions-${exportDate}.csv`;
+    link.click();
+
+    URL.revokeObjectURL(url);
+  };
+
   const budgets = {
     "Essentials": { limit: 10000, color: "bg-blue-400" },
     "Wants": { limit: 3000, color: "bg-pink-400" },
@@ -66,6 +111,45 @@ function Transaction() {
     color: budgets[cat].color
   }));
 
+  const availableCategories = useMemo(() => {
+    return Array.from(new Set(transactions.map((transaction) => transaction.category)));
+  }, [transactions]);
+
+  const parseTransactionDate = (dateString) => {
+    const parsedDate = new Date(dateString);
+    return Number.isNaN(parsedDate.getTime()) ? 0 : parsedDate.getTime();
+  };
+
+  const filteredTransactions = transactions
+    .filter((transaction) => {
+      const matchesType =
+        filters.type === "all" ||
+        (filters.type === "income" && transaction.amount >= 0) ||
+        (filters.type === "expense" && transaction.amount < 0);
+
+      const matchesCategory =
+        filters.category === "all" || transaction.category === filters.category;
+
+      return matchesType && matchesCategory;
+    })
+    .sort((first, second) => {
+      switch (filters.sortBy) {
+        case "date_asc":
+          return parseTransactionDate(first.date) - parseTransactionDate(second.date);
+        case "amount_desc":
+          return Math.abs(second.amount) - Math.abs(first.amount);
+        case "amount_asc":
+          return Math.abs(first.amount) - Math.abs(second.amount);
+        case "title_asc":
+          return first.title.localeCompare(second.title);
+        case "title_desc":
+          return second.title.localeCompare(first.title);
+        case "date_desc":
+        default:
+          return parseTransactionDate(second.date) - parseTransactionDate(first.date);
+      }
+    });
+
   return (
     <>
       <header className="mb-6 flex items-center justify-between">
@@ -77,13 +161,24 @@ function Transaction() {
             A complete history of your transactions.
           </p>
         </div>
-        <button 
-          onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 text-xs text-white border border-[#333] hover:bg-[#222] px-4 py-2 rounded-lg transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Add Transaction
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleExportTransactions}
+            disabled={activeTab !== "transactions" || filteredTransactions.length === 0}
+            className="flex items-center gap-2 text-xs text-white border border-[#333] hover:bg-[#222] px-4 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:hover:bg-transparent"
+          >
+            <Download className="w-4 h-4" />
+            Export CSV
+          </button>
+          <button 
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-2 text-xs text-white border border-[#333] hover:bg-[#222] px-4 py-2 rounded-lg transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Add Transaction
+          </button>
+        </div>
       </header>
 
       {showAddModal && (
@@ -152,7 +247,84 @@ function Transaction() {
       </div>
 
       {activeTab === "transactions" ? (
-        <TransactionList transactions={transactions} />
+        <>
+          <div className="mb-6 bg-[#161616] border border-[#222] rounded-2xl p-4 flex flex-col lg:flex-row gap-4 lg:items-end lg:justify-between">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1">
+              <div>
+                <label className="block text-xs text-[#888] mb-1">Type</label>
+                <select
+                  value={filters.type}
+                  onChange={(e) =>
+                    setFilters((current) => ({ ...current, type: e.target.value }))
+                  }
+                  className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444]"
+                >
+                  <option value="all">All types</option>
+                  <option value="income">Income</option>
+                  <option value="expense">Expense</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs text-[#888] mb-1">Category</label>
+                <select
+                  value={filters.category}
+                  onChange={(e) =>
+                    setFilters((current) => ({
+                      ...current,
+                      category: e.target.value,
+                    }))
+                  }
+                  className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444]"
+                >
+                  <option value="all">All categories</option>
+                  {availableCategories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs text-[#888] mb-1">Sort by</label>
+                <select
+                  value={filters.sortBy}
+                  onChange={(e) =>
+                    setFilters((current) => ({
+                      ...current,
+                      sortBy: e.target.value,
+                    }))
+                  }
+                  className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444]"
+                >
+                  <option value="date_desc">Newest first</option>
+                  <option value="date_asc">Oldest first</option>
+                  <option value="amount_desc">Highest amount</option>
+                  <option value="amount_asc">Lowest amount</option>
+                  <option value="title_asc">Title A-Z</option>
+                  <option value="title_desc">Title Z-A</option>
+                </select>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() =>
+                setFilters({
+                  type: "all",
+                  category: "all",
+                  sortBy: "date_desc",
+                })
+              }
+              className="text-sm text-white border border-[#333] hover:bg-[#222] px-4 py-2 rounded-lg transition-colors"
+            >
+              Reset
+            </button>
+          </div>
+
+          <TransactionList transactions={filteredTransactions} />
+        </>
       ) : (
         <OverviewCharts transactions={transactions} />
       )}

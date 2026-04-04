@@ -21,6 +21,16 @@ export default function TransactionList({ transactions }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-[#222]">
+            {transactions.length === 0 && (
+              <tr>
+                <td
+                  colSpan="4"
+                  className="py-10 text-center text-sm text-[#888]"
+                >
+                  No transactions match the selected filters.
+                </td>
+              </tr>
+            )}
             {transactions.map((t) => (
               <tr
                 key={t.id}
