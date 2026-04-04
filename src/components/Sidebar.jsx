@@ -50,10 +50,13 @@ function Sidebar() {
             <Target className="w-5 h-5 mr-3" />
             My Goals
           </Link>
-          <a href="#" className="flex items-center px-4 py-3 rounded-xl text-[#888] hover:text-white hover:bg-[#1a1a1a] transition-all">
-            <Database className="w-5 h-5 mr-3" />
+          <Link 
+            to="/investment" 
+            className={`flex items-center px-4 py-3 rounded-xl transition-all ${path === '/investment' ? 'bg-cyan-200 text-black font-medium' : 'text-[#888] hover:text-white hover:bg-[#1a1a1a]'}`}
+          >
+            <Database className={`w-5 h-5 mr-3 ${path === '/investment' ? 'text-black' : 'text-[#888]'}`} />
             Investment
-          </a>
+          </Link>
           <Link 
             to="/billing" 
             className={`flex items-center px-4 py-3 rounded-xl transition-all ${path === '/billing' ? 'bg-cyan-200 text-black font-medium' : 'text-[#888] hover:text-white hover:bg-[#1a1a1a]'}`}
