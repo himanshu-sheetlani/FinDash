@@ -1,1 +1,123 @@
 @import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --app-bg: #0e0e0e;
+  --app-shell: #0e0e0e;
+  --app-sidebar: #121212;
+  --app-topbar: #0e0e0e;
+  --app-surface: #1a1a1a;
+  --app-surface-strong: #161616;
+  --app-border: #222222;
+  --app-border-strong: #333333;
+  --app-text: #ffffff;
+  --app-muted: #888888;
+  --app-subtle: #666666;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --app-bg: #eef2f7;
+  --app-shell: #f8fafc;
+  --app-sidebar: #ffffff;
+  --app-topbar: #ffffff;
+  --app-surface: #f3f6fb;
+  --app-surface-strong: #ffffff;
+  --app-border: #d9e1ec;
+  --app-border-strong: #c6d2e1;
+  --app-text: #000000;
+  --app-muted: #5b6678;
+  --app-subtle: #7b8797;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background: var(--app-bg);
+  color: var(--app-text);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+:root[data-theme="light"] .bg-\[\#161616\] {
+  background-color: var(--app-surface-strong) !important;
+}
+
+:root[data-theme="light"] .bg-\[\#1a1a1a\] {
+  background-color: var(--app-surface) !important;
+}
+
+:root[data-theme="light"] .bg-\[\#1c1c1c\],
+:root[data-theme="light"] .bg-\[\#222\],
+:root[data-theme="light"] .bg-\[\#252525\],
+:root[data-theme="light"] .bg-\[\#2a2a2a\] {
+  background-color: #edf2f8 !important;
+}
+
+:root[data-theme="light"] .bg-\[\#121212\] {
+  background-color: var(--app-sidebar) !important;
+}
+
+:root[data-theme="light"] .bg-\[\#111\] {
+  background-color: #eef3f8 !important;
+}
+
+:root[data-theme="light"] .border-\[\#222\] {
+  border-color: var(--app-border) !important;
+}
+
+:root[data-theme="light"] .border-\[\#333\] {
+  border-color: var(--app-border-strong) !important;
+}
+
+:root[data-theme="light"] .text-white {
+  color: var(--app-text) !important;
+}
+
+:root[data-theme="light"] .text-\[\#888\] {
+  color: var(--app-muted) !important;
+}
+
+:root[data-theme="light"] .text-\[\#666\],
+:root[data-theme="light"] .text-\[\#555\] {
+  color: var(--app-subtle) !important;
+}
+
+:root[data-theme="light"] .hover\:bg-\[\#222\]:hover,
+:root[data-theme="light"] .hover\:bg-\[\#1a1a1a\]:hover {
+  background-color: #eef3f8 !important;
+}
+
+:root[data-theme="light"] .hover\:border-\[\#333\]:hover,
+:root[data-theme="light"] .hover\:border-\[\#444\]:hover {
+  border-color: #9fb2c9 !important;
+}
+
+:root[data-theme="light"] .bg-cyan-200 {
+  background-color: #1bbeff !important;
+}
+
+:root[data-theme="light"] .text-cyan-200 {
+  color: #1bbeff !important;
+}
+
+:root[data-theme="light"] .border-cyan-500\/40 {
+  border-color: rgba(32, 210, 255, 0.4) !important;
+}
+
+:root[data-theme="light"] .bg-cyan-500\/20 {
+  background-color: rgb(15 118 110 / 0.16) !important;
+}
+
+:root[data-theme="light"] .border-cyan-500\/30 {
+  border-color: rgb(15 118 110 / 0.3) !important;
+}
+
+:root[data-theme="light"] hr.border-\[\#333\] {
+  border-color: var(--app-border-strong) !important;
+}

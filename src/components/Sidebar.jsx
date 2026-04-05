@@ -13,17 +13,17 @@ function Sidebar() {
     }`;
 
   return (
-    <aside className="w-full xl:w-[260px] bg-[#121212] border-b xl:border-b-0 xl:border-r border-[#222] flex flex-col xl:h-screen xl:sticky xl:top-0">
+    <aside className="w-full xl:w-[260px] bg-[var(--app-sidebar)] text-[var(--app-text)] border-b xl:border-b-0 xl:border-r border-[color:var(--app-border)] flex flex-col xl:h-screen xl:sticky xl:top-0">
       <div className="p-4 sm:p-6 pb-3 sm:pb-2">
         <div className="flex items-center space-x-3 mb-4 xl:mb-8">
           <img
             src="/Logo.webp"
             alt="FinDash logo"
-            className="w-10 h-10 rounded-xl object-contain bg-white/5 p-1"
+            className="w-10 h-10 rounded-xl object-contain bg-[var(--app-surface)] p-1"
           />
           <div>
-            <h1 className="font-bold text-white text-base leading-none">FinDash</h1>
-            <p className="text-[#7d7d7d] text-xs mt-0.5">Financial Assistant</p>
+            <h1 className="font-bold text-base leading-none">FinDash</h1>
+            <p className="text-[var(--app-muted)] text-xs mt-0.5">Financial Assistant</p>
           </div>
           {/* <div className="ml-auto flex items-center justify-center w-5 h-5 rounded border border-[#333]">
             <div className="w-3 h-1.5 border-b border-l border-white transform -rotate-45 -mt-1"></div>
@@ -32,7 +32,7 @@ function Sidebar() {
       </div>
 
       <div className="flex-1 xl:overflow-y-auto overflow-x-hidden scrollbar-hide px-3 sm:px-4 pb-4">
-        <p className="text-[#666] text-[11px] font-semibold tracking-widest uppercase mb-3 px-2 hidden xl:block">Menu</p>
+        <p className="text-[var(--app-subtle)] text-[11px] font-semibold tracking-widest uppercase mb-3 px-2 hidden xl:block">Menu</p>
         <nav className="flex xl:block gap-2 xl:space-y-1 mb-4 xl:mb-8 overflow-x-auto xl:overflow-visible scrollbar-hide pb-1">
           <Link 
             to="/dashboard" 
@@ -74,7 +74,7 @@ function Sidebar() {
           </Link>
         </nav>
 
-        <p className="text-[#666] text-[11px] font-semibold tracking-widest uppercase mb-3 px-2 hidden xl:block">Support</p>
+        <p className="text-[var(--app-subtle)] text-[11px] font-semibold tracking-widest uppercase mb-3 px-2 hidden xl:block">Support</p>
         <nav className="space-y-1 mb-0 xl:mb-8 hidden xl:block">
           <Link
             to="/help"
@@ -87,10 +87,10 @@ function Sidebar() {
       </div>
 
       <div className="p-4 pt-0 mt-auto hidden xl:block">
-        <div className="bg-gradient-to-b from-[#222] to-[#121212] rounded-2xl p-5 border border-[#333] text-center shadow-lg relative overflow-hidden">
+        <div className="bg-[var(--app-surface-strong)] rounded-2xl p-5 border border-[color:var(--app-border-strong)] text-center shadow-lg relative overflow-hidden">
           <div className="absolute inset-0 bg-cyan-200/[0.02]"></div>
-          <h3 className="text-white font-semibold mb-1 relative z-10">Become Pro Access</h3>
-          <p className="text-[#888] text-xs mb-4 leading-relaxed relative z-10">Try your experience for using more features</p>
+          <h3 className="font-semibold mb-1 relative z-10">Become Pro Access</h3>
+          <p className="text-[var(--app-muted)] text-xs mb-4 leading-relaxed relative z-10">Try your experience for using more features</p>
           <button className="w-full bg-cyan-200 hover:bg-cyan-300 text-black font-semibold py-2.5 rounded-xl transition-colors relative z-10 flex items-center justify-center text-sm shadow-[0_0_15px_rgba(34,211,238,0.3)]">
             <Zap className="w-4 h-4 mr-2" />
             Upgrade Pro
