@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import gsap from "gsap";
 import InvestmentHeader from "../components/investment/InvestmentHeader";
 import InvestmentSearchPanel from "../components/investment/InvestmentSearchPanel";
 import InvestmentStarterPicks from "../components/investment/InvestmentStarterPicks";
 import InvestmentStockGrid from "../components/investment/InvestmentStockGrid";
+import useMotionSafeLayoutEffect from "../hooks/useMotionSafeLayoutEffect";
 
 const memoryCache = {};
 
 function Investment() {
+  const pageRef = useRef(null);
   const apiKey = import.meta.env.VITE_FINNHUB_KEY || "";
 
   const [stocks, setStocks] = useState([]);
@@ -37,6 +40,20 @@ function Investment() {
       setStocks([]);
     }
   }, [apiKey, savedSymbols]);
+
+  useMotionSafeLayoutEffect(pageRef, () => {
+    gsap.fromTo(
+      ".investment-animate",
+      { y: 20, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.55,
+        ease: "power3.out",
+        stagger: 0.08,
+      }
+    );
+  }, [stocks.length, savedSymbols.length, searchResults.length]);
 
   const fetchStockData = async (symbolsToFetch, forceRefresh = false) => {
     setLoading(true);
@@ -111,13 +128,16 @@ function Investment() {
 
 
   return (
-    <>
-      <InvestmentHeader
+    <div ref={pageRef}>
+      <div className="investment-animate">
+        <InvestmentHeader
         loading={loading}
         onRefresh={() => fetchStockData(savedSymbols, true)}
       />
+      </div>
 
-      <InvestmentSearchPanel
+      <div className="investment-animate">
+        <InvestmentSearchPanel
         apiKey={apiKey}
         isSearching={isSearching}
         savedSymbols={savedSymbols}
@@ -128,19 +148,24 @@ function Investment() {
         onAddSymbol={addConfirmedSymbol}
         onClearResults={() => setSearchResults([])}
       />
+      </div>
 
-      <InvestmentStarterPicks
+      <div className="investment-animate">
+        <InvestmentStarterPicks
         loading={loading}
         savedSymbolsCount={savedSymbols.length}
         stocks={FAMOUS_STOCKS}
         onAddSymbol={addConfirmedSymbol}
       />
+      </div>
 
-      <InvestmentStockGrid
+      <div className="investment-animate">
+        <InvestmentStockGrid
         stocks={stocks}
         onRemoveSymbol={removeSymbol}
       />
-    </>
+      </div>
+    </div>
   );
 }
 

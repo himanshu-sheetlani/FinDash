@@ -1,10 +1,13 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import { Download, Plus, X } from "lucide-react";
 import { getTransactions, addTransaction } from "../utils/storage";
 import OverviewCharts from "../components/OverviewCharts";
 import TransactionList from "../components/TransactionList";
+import gsap from "gsap";
+import useMotionSafeLayoutEffect from "../hooks/useMotionSafeLayoutEffect";
 
 function Transaction() {
+  const pageRef = useRef(null);
   const [activeTab, setActiveTab] = useState("transactions");
   const [transactions, setTransactions] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -150,9 +153,49 @@ function Transaction() {
       }
     });
 
+  useMotionSafeLayoutEffect(pageRef, () => {
+    gsap.fromTo(
+      ".transaction-animate",
+      { y: 20, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: "power3.out",
+        stagger: 0.07,
+      }
+    );
+  }, [activeTab, filteredTransactions.length]);
+
+  useMotionSafeLayoutEffect(pageRef, () => {
+    if (!showAddModal) {
+      return;
+    }
+
+    const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
+    timeline
+      .fromTo(
+        ".transaction-modal-backdrop",
+        { opacity: 0 },
+        { opacity: 1, duration: 0.2 }
+      )
+      .fromTo(
+        ".transaction-modal-panel",
+        { y: 28, opacity: 0, scale: 0.96 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.35 },
+        "-=0.1"
+      )
+      .fromTo(
+        ".transaction-modal-panel form > *",
+        { y: 12, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.28, stagger: 0.04 },
+        "-=0.18"
+      );
+  }, [showAddModal]);
+
   return (
-    <>
-      <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div ref={pageRef}>
+      <header className="transaction-animate mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-3xl font-semibold text-white tracking-tight">
             Transactions
@@ -182,8 +225,8 @@ function Transaction() {
       </header>
 
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#161616] border border-[#333] rounded-2xl w-full max-w-md p-5 sm:p-6 relative max-h-[90vh] overflow-y-auto">
+        <div className="transaction-modal-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="transaction-modal-panel bg-[#161616] border border-[#333] rounded-2xl w-full max-w-md p-5 sm:p-6 relative max-h-[90vh] overflow-y-auto">
             <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-[#888] hover:text-white">
               <X className="w-5 h-5" />
             </button>
@@ -231,7 +274,7 @@ function Transaction() {
         </div>
       )}
 
-      <div className="flex gap-2 mb-6 p-1 bg-[#161616] border border-[#222] rounded-xl w-full sm:w-fit overflow-x-auto">
+      <div className="transaction-animate flex gap-2 mb-6 p-1 bg-[#161616] border border-[#222] rounded-xl w-full sm:w-fit overflow-x-auto">
         <button
           onClick={() => setActiveTab("transactions")}
           className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors whitespace-nowrap flex-1 sm:flex-none ${activeTab === "transactions" ? "bg-[#222] text-white shadow-[0_0_8px_rgba(255,255,255,0.05)]" : "text-[#888] hover:text-[#bbb]"}`}
@@ -248,7 +291,7 @@ function Transaction() {
 
       {activeTab === "transactions" ? (
         <>
-          <div className="mb-6 bg-[#161616] border border-[#222] rounded-2xl p-4 flex flex-col lg:flex-row gap-4 lg:items-end lg:justify-between">
+          <div className="transaction-animate mb-6 bg-[#161616] border border-[#222] rounded-2xl p-4 flex flex-col lg:flex-row gap-4 lg:items-end lg:justify-between">
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 flex-1">
               <div>
                 <label className="block text-xs text-[#888] mb-1">Type</label>
@@ -323,12 +366,16 @@ function Transaction() {
             </button>
           </div>
 
-          <TransactionList transactions={filteredTransactions} />
+          <div className="transaction-animate">
+            <TransactionList transactions={filteredTransactions} />
+          </div>
         </>
       ) : (
-        <OverviewCharts transactions={transactions} />
+        <div className="transaction-animate">
+          <OverviewCharts transactions={transactions} />
+        </div>
       )}
-    </>
+    </div>
   );
 }
 
