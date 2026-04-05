@@ -61,7 +61,7 @@ function Dashboard() {
         y: 0,
         scale: 1,
         rotationY: 0,
-        filter: "blur(8px)",
+        filter: "blur(0px)",
         duration: 1.5,
         ease: "power4.out",
       })
