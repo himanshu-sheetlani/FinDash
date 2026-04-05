@@ -1,15 +1,21 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ArrowRightLeft, Target, Database, CreditCard, BarChart2, HelpCircle, Zap, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, ArrowRightLeft, Target, Database, CreditCard, HelpCircle, Zap, ChevronRight } from 'lucide-react';
 
 function Sidebar() {
   const location = useLocation();
   const path = location.pathname;
+  const navItemClass = (isActive) =>
+    `flex items-center px-4 py-3 rounded-xl transition-all whitespace-nowrap ${
+      isActive
+        ? "bg-cyan-200 text-black font-medium"
+        : "text-[#888] hover:text-white hover:bg-[#1a1a1a]"
+    }`;
 
   return (
-    <aside className="w-full xl:w-[260px] bg-[#121212] border-r border-[#222] flex flex-col xl:h-screen xl:sticky xl:top-0">
-      <div className="p-6 pb-2">
-        <div className="flex items-center space-x-3 mb-8">
+    <aside className="w-full xl:w-[260px] bg-[#121212] border-b xl:border-b-0 xl:border-r border-[#222] flex flex-col xl:h-screen xl:sticky xl:top-0">
+      <div className="p-4 sm:p-6 pb-3 sm:pb-2">
+        <div className="flex items-center space-x-3 mb-4 xl:mb-8">
           <img
             src="/Logo.webp"
             alt="FinDash logo"
@@ -25,12 +31,12 @@ function Sidebar() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide px-4">
-        <p className="text-[#666] text-[11px] font-semibold tracking-widest uppercase mb-3 px-2">Menu</p>
-        <nav className="space-y-1 mb-8">
+      <div className="flex-1 xl:overflow-y-auto overflow-x-hidden scrollbar-hide px-3 sm:px-4 pb-4">
+        <p className="text-[#666] text-[11px] font-semibold tracking-widest uppercase mb-3 px-2 hidden xl:block">Menu</p>
+        <nav className="flex xl:block gap-2 xl:space-y-1 mb-4 xl:mb-8 overflow-x-auto xl:overflow-visible scrollbar-hide pb-1">
           <Link 
             to="/dashboard" 
-            className={`flex items-center px-4 py-3 rounded-xl transition-all ${path === '/dashboard' ? 'bg-cyan-200 text-black font-medium' : 'text-[#888] hover:text-white hover:bg-[#1a1a1a]'}`}
+            className={navItemClass(path === '/dashboard')}
           >
             <LayoutDashboard className={`w-5 h-5 mr-3 ${path === '/dashboard' ? 'text-black' : 'text-[#888]'}`} />
             Dashboard
@@ -40,44 +46,47 @@ function Sidebar() {
           </Link>
           <Link 
             to="/transaction" 
-            className={`flex items-center px-4 py-3 rounded-xl transition-all ${path === '/transaction' ? 'bg-cyan-200 text-black font-medium' : 'text-[#888] hover:text-white hover:bg-[#1a1a1a]'}`}
+            className={navItemClass(path === '/transaction')}
           >
             <ArrowRightLeft className="w-5 h-5 mr-3" />
             Transactions
           </Link>
           <Link 
             to="/goals" 
-            className={`flex items-center px-4 py-3 rounded-xl transition-all ${path === '/goals' ? 'bg-cyan-200 text-black font-medium' : 'text-[#888] hover:text-white hover:bg-[#1a1a1a]'}`}
+            className={navItemClass(path === '/goals')}
           >
             <Target className="w-5 h-5 mr-3" />
             My Goals
           </Link>
           <Link 
             to="/investment" 
-            className={`flex items-center px-4 py-3 rounded-xl transition-all ${path === '/investment' ? 'bg-cyan-200 text-black font-medium' : 'text-[#888] hover:text-white hover:bg-[#1a1a1a]'}`}
+            className={navItemClass(path === '/investment')}
           >
             <Database className={`w-5 h-5 mr-3 ${path === '/investment' ? 'text-black' : 'text-[#888]'}`} />
             Investment
           </Link>
           <Link 
             to="/billing" 
-            className={`flex items-center px-4 py-3 rounded-xl transition-all ${path === '/billing' ? 'bg-cyan-200 text-black font-medium' : 'text-[#888] hover:text-white hover:bg-[#1a1a1a]'}`}
+            className={navItemClass(path === '/billing')}
           >
             <CreditCard className={`w-5 h-5 mr-3 ${path === '/billing' ? 'text-black' : 'text-[#888]'}`} />
             Bills and Payment
           </Link>
         </nav>
 
-        <p className="text-[#666] text-[11px] font-semibold tracking-widest uppercase mb-3 px-2">Support</p>
-        <nav className="space-y-1 mb-8">
-          <a href="#" className="flex items-center px-4 py-3 rounded-xl text-[#888] hover:text-white hover:bg-[#1a1a1a] transition-all">
+        <p className="text-[#666] text-[11px] font-semibold tracking-widest uppercase mb-3 px-2 hidden xl:block">Support</p>
+        <nav className="space-y-1 mb-0 xl:mb-8 hidden xl:block">
+          <Link
+            to="/help"
+            className={navItemClass(path === '/help')}
+          >
             <HelpCircle className="w-5 h-5 mr-3" />
             Helps
-          </a>
+          </Link>
         </nav>
       </div>
 
-      <div className="p-4 mt-auto">
+      <div className="p-4 pt-0 mt-auto hidden xl:block">
         <div className="bg-gradient-to-b from-[#222] to-[#121212] rounded-2xl p-5 border border-[#333] text-center shadow-lg relative overflow-hidden">
           <div className="absolute inset-0 bg-cyan-200/[0.02]"></div>
           <h3 className="text-white font-semibold mb-1 relative z-10">Become Pro Access</h3>

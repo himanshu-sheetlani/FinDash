@@ -152,7 +152,7 @@ function Transaction() {
 
   return (
     <>
-      <header className="mb-6 flex items-center justify-between">
+      <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-3xl font-semibold text-white tracking-tight">
             Transactions
@@ -161,19 +161,19 @@ function Transaction() {
             A complete history of your transactions.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
           <button
             type="button"
             onClick={handleExportTransactions}
             disabled={activeTab !== "transactions" || filteredTransactions.length === 0}
-            className="flex items-center gap-2 text-xs text-white border border-[#333] hover:bg-[#222] px-4 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:hover:bg-transparent"
+            className="flex items-center justify-center gap-2 text-xs text-white border border-[#333] hover:bg-[#222] px-4 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:hover:bg-transparent w-full sm:w-auto"
           >
             <Download className="w-4 h-4" />
             Export CSV
           </button>
           <button 
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 text-xs text-white border border-[#333] hover:bg-[#222] px-4 py-2 rounded-lg transition-colors"
+            className="flex items-center justify-center gap-2 text-xs text-white border border-[#333] hover:bg-[#222] px-4 py-2 rounded-lg transition-colors w-full sm:w-auto"
           >
             <Plus className="w-4 h-4" />
             Add Transaction
@@ -183,7 +183,7 @@ function Transaction() {
 
       {showAddModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#161616] border border-[#333] rounded-2xl w-full max-w-md p-6 relative">
+          <div className="bg-[#161616] border border-[#333] rounded-2xl w-full max-w-md p-5 sm:p-6 relative max-h-[90vh] overflow-y-auto">
             <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-[#888] hover:text-white">
               <X className="w-5 h-5" />
             </button>
@@ -193,7 +193,7 @@ function Transaction() {
                 <label className="block text-xs text-[#888] mb-1">Description</label>
                 <input type="text" required value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444] placeholder-[#666]" placeholder="e.g. Netflix" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs text-[#888] mb-1">Amount (₹)</label>
                   <input type="number" required min="1" step="any" value={formData.amount} onChange={e => setFormData({...formData, amount: e.target.value})} className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444] placeholder-[#666]" placeholder="0.00" />
@@ -206,7 +206,7 @@ function Transaction() {
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs text-[#888] mb-1">Category</label>
                   <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#444]">
@@ -231,16 +231,16 @@ function Transaction() {
         </div>
       )}
 
-      <div className="flex gap-2 mb-6 p-1 bg-[#161616] border border-[#222] rounded-xl w-fit">
+      <div className="flex gap-2 mb-6 p-1 bg-[#161616] border border-[#222] rounded-xl w-full sm:w-fit overflow-x-auto">
         <button
           onClick={() => setActiveTab("transactions")}
-          className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${activeTab === "transactions" ? "bg-[#222] text-white shadow-[0_0_8px_rgba(255,255,255,0.05)]" : "text-[#888] hover:text-[#bbb]"}`}
+          className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors whitespace-nowrap flex-1 sm:flex-none ${activeTab === "transactions" ? "bg-[#222] text-white shadow-[0_0_8px_rgba(255,255,255,0.05)]" : "text-[#888] hover:text-[#bbb]"}`}
         >
           Transactions
         </button>
         <button
           onClick={() => setActiveTab("categories")}
-          className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${activeTab === "categories" ? "bg-[#222] text-white shadow-[0_0_8px_rgba(255,255,255,0.05)]" : "text-[#888] hover:text-[#bbb]"}`}
+          className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors whitespace-nowrap flex-1 sm:flex-none ${activeTab === "categories" ? "bg-[#222] text-white shadow-[0_0_8px_rgba(255,255,255,0.05)]" : "text-[#888] hover:text-[#bbb]"}`}
         >
           Overview
         </button>
@@ -249,7 +249,7 @@ function Transaction() {
       {activeTab === "transactions" ? (
         <>
           <div className="mb-6 bg-[#161616] border border-[#222] rounded-2xl p-4 flex flex-col lg:flex-row gap-4 lg:items-end lg:justify-between">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 flex-1">
               <div>
                 <label className="block text-xs text-[#888] mb-1">Type</label>
                 <select
@@ -317,7 +317,7 @@ function Transaction() {
                   sortBy: "date_desc",
                 })
               }
-              className="text-sm text-white border border-[#333] hover:bg-[#222] px-4 py-2 rounded-lg transition-colors"
+              className="text-sm text-white border border-[#333] hover:bg-[#222] px-4 py-2 rounded-lg transition-colors w-full lg:w-auto"
             >
               Reset
             </button>
