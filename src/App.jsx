@@ -7,6 +7,7 @@ import Transaction from './pages/Transaction';
 import Goals from './pages/Goals';
 import Billing from './pages/Billing';
 import Investment from './pages/Investment';
+import Help from './pages/Help';
 import { getStoredUser } from './utils/storage';
 
 function ProtectedRoute({ children }) {
@@ -34,6 +35,7 @@ function App() {
           <Route path="/goals" element={<Goals />} />
           <Route path="/billing" element={<Billing />} />
           <Route path="/investment" element={<Investment />} />
+          <Route path="/help" element={<Help />} />
         </Route>
       </Routes>
     </BrowserRouter>
