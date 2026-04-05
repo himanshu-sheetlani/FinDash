@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { ChevronDown, Info, Heart } from "lucide-react";
-import { getCalculatedBalance, formatAbsoluteCurrency } from "../utils/storage";
+import { getCalculatedBalance } from "../utils/storage";
 
 function BalanceCard() {
   const [balance, setBalance] = useState(0);
+
+  const formatBalance = (amount) => {
+    const isNegative = amount < 0;
+    const absAmount = Math.abs(amount);
+    const formatted = new Intl.NumberFormat("en-IN").format(absAmount);
+    return `${isNegative ? "-" : ""}₹${formatted}`;
+  };
 
   useEffect(() => {
     const fetchBalance = () => {
@@ -25,8 +32,12 @@ function BalanceCard() {
       <div className="mb-4 relative z-10">
         <p className="text-xs text-[#888] mb-1">Balance</p>
         <div className="flex justify-between items-end">
-          <h1 className="text-4xl font-light tracking-tight text-white font-semibold">
-            {formatAbsoluteCurrency(balance)}
+          <h1
+            className={`text-4xl font-light tracking-tight font-semibold ${
+              balance < 0 ? "text-red-400" : "text-white"
+            }`}
+          >
+            {formatBalance(balance)}
           </h1>
           <div className="w-8 h-8 rounded-full bg-[#222] flex items-center justify-center border border-[#333]">
             <Info className="w-4 h-4 text-cyan-200" />
